@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup as bs
 import xml.etree.ElementTree as et
+import pandas as pd
 
 key = 'Y/DojNPIdumW2rLgBl7+w43rSjNUdCLXFV8DRWdfHGnuvngMBZ+ZZ8WdS3qPc+dcj1AWifo0/C/qforfUB8oEQ=='
 
@@ -43,7 +44,7 @@ df1 = api.get_data(
     trade_type="매매",
     sigungu_code="41111",
     start_year_month="202001",
-    end_year_month="202212",
+    end_year_month="202306",
 )
 
 #%%
@@ -57,7 +58,7 @@ df2 = api.get_data(
     trade_type="매매",
     sigungu_code="41113",
     start_year_month="202001",
-    end_year_month="202212",
+    end_year_month="202306",
 )
 #%%
 df2 = df2.loc[:,'지역코드':'거래금액']
@@ -71,7 +72,7 @@ df3 = api.get_data(
     trade_type="매매",
     sigungu_code="41115",
     start_year_month="202001",
-    end_year_month="202212",
+    end_year_month="202306",
 )
 #%%
 df3 = df3.loc[:,'지역코드':'거래금액']
@@ -84,7 +85,7 @@ df4 = api.get_data(
     trade_type="매매",
     sigungu_code="41117",
     start_year_month="202001",
-    end_year_month="202212",
+    end_year_month="202306",
 )
 #%%
 df4 = df4.loc[:,'지역코드':'거래금액']
@@ -92,16 +93,23 @@ df4['거래금액'] = df4['거래금액']*10000
 df4.to_csv('영통구 아파트 거래.csv', index=False)
 
 #%%
-import pandas as pd
 
 region = pd.DataFrame({'지역코드':[41111, 41113, 41115, 41117],
                              '지역구':['장안구', '권선구', '팔달구', '영통구']})
 region.to_csv('지역.csv', index=False)
 
-#%% 금융산업?
+#%% 수원시 아파트거래 value_counts
 
-url = 'http://apis.data.go.kr/1160100/service/GetFnCoBasiInfoService/getFnCoOutl'
-params ={'serviceKey' : key, 'pageNo' : '1', 'numOfRows' : '10', 'resultType' : 'xml', 'basDt' : '20200408', 'crno' : '1101113892240', 'fncoNm' : '메리츠자산운용' }
+# temp1 = df1['법정동'].value_counts()
+# temp2 = df2['법정동'].value_counts()
+# temp3 = df3['법정동'].value_counts()
+# temp4 = df4['법정동'].value_counts()
+# #%%
+# temp5 = pd.concat([temp1,temp2,temp3,temp4])
 
-response = requests.get(url, params=params)
-print(response.text)
+# temp5.to_csv('지역별거래건수.csv', index=True)
+
+#%% 수원시 아파트 실거래가 상세정보
+
+df5 = pd.concat([df1,df2,df3,df4])
+df5.to_csv('수원시 아파트 거래.csv', index=False)
