@@ -113,3 +113,6 @@ region.to_csv('지역.csv', index=False)
 
 df5 = pd.concat([df1,df2,df3,df4])
 df5.to_csv('수원시 아파트 거래.csv', index=False)
+
+#%%
+
