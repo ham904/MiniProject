@@ -1,7 +1,6 @@
 import requests
-from bs4 import BeautifulSoup as bs
-import xml.etree.ElementTree as et
 import pandas as pd
+import sqlite3
 
 key = 'Y/DojNPIdumW2rLgBl7+w43rSjNUdCLXFV8DRWdfHGnuvngMBZ+ZZ8WdS3qPc+dcj1AWifo0/C/qforfUB8oEQ=='
 
@@ -22,14 +21,6 @@ from PublicDataReader import TransactionPrice
 
 service_key = key
 api = TransactionPrice(service_key)
-
-# 단일 월 조회
-# df = api.get_data(
-#     property_type="아파트",
-#     trade_type="매매",
-#     sigungu_code="11650",
-#     year_month="202212",
-# )
 
 #%% 수원시 장안구의 시군구 코드 알아내기
 code = pdr.code_bdong()
@@ -98,16 +89,6 @@ region = pd.DataFrame({'지역코드':[41111, 41113, 41115, 41117],
                              '지역구':['장안구', '권선구', '팔달구', '영통구']})
 region.to_csv('지역.csv', index=False)
 
-#%% 수원시 아파트거래 value_counts
-
-# temp1 = df1['법정동'].value_counts()
-# temp2 = df2['법정동'].value_counts()
-# temp3 = df3['법정동'].value_counts()
-# temp4 = df4['법정동'].value_counts()
-# #%%
-# temp5 = pd.concat([temp1,temp2,temp3,temp4])
-
-# temp5.to_csv('지역별거래건수.csv', index=True)
 
 #%% 수원시 아파트 실거래가 상세정보
 
@@ -115,4 +96,8 @@ df5 = pd.concat([df1,df2,df3,df4])
 df5.to_csv('수원시 아파트 거래.csv', index=False)
 
 #%%
+
+con = sqlite3.connect('./수원시 아파트 실거래가 정보.db')
+df5.to_sql('suwon_apartment_trading_information', con)
+
 
